@@ -7,7 +7,7 @@ import { RouterLink, RouterView } from 'vue-router';
     <RouterLink to="/short">短轮询</RouterLink>
     <RouterLink to="/long">长轮询</RouterLink>
     <RouterLink to="/sse">SSE</RouterLink>
-    <RouterLink to="/websocket">Websocket</RouterLink>
+    <!-- <RouterLink to="/websocket">Websocket</RouterLink> -->
   </nav>
   <RouterView />
 </template>

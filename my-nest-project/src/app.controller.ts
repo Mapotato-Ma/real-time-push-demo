@@ -1,5 +1,13 @@
 import { Controller, Get, Header, Sse } from '@nestjs/common';
-import { Observable, Subscription, filter, interval, map, timer } from 'rxjs';
+import {
+  Observable,
+  Subscription,
+  filter,
+  interval,
+  map,
+  take,
+  timer,
+} from 'rxjs';
 @Controller()
 export class AppController {
   private shortCurrentProcess = 1;
@@ -60,8 +68,8 @@ export class AppController {
 
   @Sse('/api/sse')
   sse(): Observable<MessageEvent> {
-    return interval(500).pipe(
-      filter((data) => data <= 10 && data > 0),
+    return timer(500, 500).pipe(
+      take(11),
       map((value) => {
         return {
           data: { process: `当前的进度为${value * 10}%`, value: value * 10 },

@@ -20,7 +20,6 @@ const startLoading = async () => {
     currentValue.value = value;
   }
   if (currentValue.value <= 90) {
-    console.log('🚀 ~ 继续请求 ~ 23行', currentValue.value);
     await startLoading();
   }
 };
