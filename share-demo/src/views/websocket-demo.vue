@@ -1,53 +1,46 @@
 <template>
-  <div>
-    <div>
-      <input v-model="chatList.value" />
-      <button @click="handleClick()" style="margin-left: 12px">发送</button>
-
-      <div>
-        <ul>
-          <li v-for="(item, index) in chatList.list" :key="index">{{ item }}</li>
-        </ul>
-      </div>
-    </div>
-  </div>
+  <div class="websocket-demo">{{ count }}</div>
 </template>
 
 <script lang="ts" setup>
-import { onBeforeMount, onMounted, onUnmounted, reactive } from 'vue';
-import { socket } from '@/utils';
-const chatList = reactive<{
-  value: string;
-  list: Array<any>;
-}>({
-  value: '',
-  list: []
-});
-
-// 组件挂载前让socket连接起来
-onBeforeMount(() => {
-  socket.connect();
-});
-
-// 组件挂载完毕完成后，监听onMessage事件
+import { onMounted, onUnmounted, ref } from 'vue';
+const count = ref(0);
+const websocket = ref<WebSocket>();
 onMounted(() => {
-  socket.on('onMessage', (e) => {
-    console.log(e);
-    chatList.list.push(e.content);
-  });
+  if ('WebSocket' in window) {
+    websocket.value = new WebSocket('ws://127.0.0.1:13000');
+    // 打开
+    websocket.value.onopen = function () {
+      websocket.value?.send('开始获取数据！');
+    };
+    // 接收
+    websocket.value.onmessage = function (e) {
+      count.value = e.data;
+      console.log('🚀 ~ message ~ 13行', e);
+    };
+    // 关闭
+    websocket.value.onclose = function (e) {
+      console.log('🚀 ~ close ~ 13行', e);
+    };
+    // 连接发生错误的回调方法
+    websocket.value.onerror = function (e) {
+      console.log('🚀 ~ error ~ 13行', e);
+    };
+  } else {
+    console.log('该浏览器不支持websocket!');
+    return;
+  }
 });
 
-// 组件销毁时断开连接
 onUnmounted(() => {
-  socket.disconnect();
+  websocket.value?.close();
 });
-
-// 点击btn发送socket消息
-const handleClick = () => {
-  socket.emit('newMessage', chatList.value, (e: any) => {
-    console.log(e);
-  });
-};
 </script>
 
-<style lang="less" scoped></style>
+<style lang="less" scoped>
+.websocket-demo {
+  font-size: 100px;
+  font-weight: bolder;
+  color: rgb(240, 58, 17);
+}
+</style>

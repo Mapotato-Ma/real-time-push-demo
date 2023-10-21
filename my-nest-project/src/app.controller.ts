@@ -1,13 +1,6 @@
-import { Controller, Get, Header, Sse } from '@nestjs/common';
-import {
-  Observable,
-  Subscription,
-  filter,
-  interval,
-  map,
-  take,
-  timer,
-} from 'rxjs';
+import { Controller, Get, Header, Res, Sse } from '@nestjs/common';
+import { Observable, Subscription, filter, map, take, timer } from 'rxjs';
+import { Response } from 'express';
 @Controller()
 export class AppController {
   private shortCurrentProcess = 1;
@@ -76,5 +69,16 @@ export class AppController {
         } as MessageEvent;
       }),
     );
+  }
+
+  @Get('/api/iframe-stream')
+  message(@Res() res: Response) {
+    timer(0, 500).subscribe((count) => {
+      res.write(`
+      <script>
+        parent.document.getElementById('count').innerHTML = '${count * 27}';
+      </script>
+    `);
+    });
   }
 }

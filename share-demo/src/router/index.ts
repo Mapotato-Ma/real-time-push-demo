@@ -19,6 +19,16 @@ const router = createRouter({
       component: () => import('../views/long-polling.vue')
     },
     {
+      path: '/iframe-stream',
+      name: 'iframe-stream',
+      component: () => import('../views/iframe-stream.vue')
+    },
+    {
+      path: '/mqtt',
+      name: 'mqtt',
+      component: () => import('../views/mqtt-demo.vue')
+    },
+    {
       path: '/sse',
       name: 'sse',
       component: () => import('../views/server-send-event.vue')
