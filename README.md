@@ -2,7 +2,7 @@
 
 # 前提
 
-电脑中已预装 node 与 npm
+本机已预装 node 与 npm
 
 # 启动后端服务：
 
@@ -14,7 +14,7 @@
   npm run start
 ```
 
-3. 启动 websocket 服务：在 node 目录下打开终端，输入 powershell 命令
+2. 启动 websocket 服务：在 node 目录下打开终端，输入 powershell 命令
 
 ```js
   npm install
