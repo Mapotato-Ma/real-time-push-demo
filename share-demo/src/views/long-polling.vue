@@ -7,12 +7,10 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, ref } from 'vue';
+import { ref } from 'vue';
 
 const currentValue = ref(0);
 const processText = ref('当前的进度为0%');
-onMounted(() => {});
-
 const startLoading = async () => {
   const { process, value } = await (await fetch('/api/long')).json();
   if (process && value) {

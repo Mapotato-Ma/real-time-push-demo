@@ -5,7 +5,8 @@ import { Response } from 'express';
 export class AppController {
   private shortCurrentProcess = 1;
   private canPushData = true;
-  private shortTimer = timer(1000, 1000).pipe(
+  // 生产流
+  private generateData$ = timer(1000, 1000).pipe(
     filter((data) => data < 10 && data > 0),
   );
   private shortTimerSubscription: Subscription;
@@ -14,6 +15,7 @@ export class AppController {
   @Get('/api/short')
   shortPolling(): unknown {
     if (this.canPushData) {
+      // 有新数据产生，推送数据
       this.canPushData = false;
       return {
         value: this.shortCurrentProcess * 10,
@@ -29,7 +31,8 @@ export class AppController {
   @Get('/api/start')
   startLoading() {
     this.stopLoading();
-    this.shortTimerSubscription = this.shortTimer.subscribe(() => {
+    // 开始生产数据
+    this.shortTimerSubscription = this.generateData$.subscribe(() => {
       ++this.shortCurrentProcess;
       this.canPushData = true;
     });
@@ -76,7 +79,7 @@ export class AppController {
     timer(0, 500).subscribe((count) => {
       res.write(`
       <script>
-        parent.document.getElementById('count').innerHTML = '${count * 27}';
+        window.parent.postMessage(${count * 27});
       </script>
     `);
     });
